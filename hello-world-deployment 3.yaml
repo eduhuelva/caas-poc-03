@@ -80,12 +80,25 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+status:
+  loadBalancer: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: poc-caas-03-hpa
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: poc-caas-03-hpa.apps.k8s-001.frontedge.net
+    http:
+      paths:
       - backend:
           service:
             name: service-hello-world-03-hpa
             port:
               number: 80
-        path: /hpa
+        path: /
         pathType: Prefix
 status:
   loadBalancer: {}
