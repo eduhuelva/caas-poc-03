@@ -12,19 +12,6 @@ spec:
   selector:
     app: hello-world-03
 ---
-# hello-kubernetes.custom-message.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: service-hello-world-03-hpa
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 80
-  selector:
-    app: hello-world-03
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,21 +34,6 @@ spec:
         env:
         - name: MESSAGE
           value: Juan Antonio, I just deployed this on Kubernetes!
-      - name: php-apache
-        image: k8s.gcr.io/hpa-example
-        imagePullPolicy: IfNotPresent        
-        ports:
-        - containerPort: 80
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: "password"
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "200m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -83,41 +55,3 @@ spec:
 status:
   loadBalancer: {}
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: poc-caas-03-hpa
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: poc-caas-03-hpa.apps.k8s-001.frontedge.net
-    http:
-      paths:
-      - backend:
-          service:
-            name: service-hello-world-03-hpa
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
-status:
-  loadBalancer: {}
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: poc-caas-03-autoscaler
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: hello-world-03
-  minReplicas: 3
-  maxReplicas: 6
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
