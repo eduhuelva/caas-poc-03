@@ -12,6 +12,19 @@ spec:
   selector:
     app: hello-world-03
 ---
+# hello-kubernetes.custom-message.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-hello-world-03-hpa
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: hello-world-03
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
