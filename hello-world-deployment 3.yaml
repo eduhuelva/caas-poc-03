@@ -80,6 +80,13 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+      - backend:
+          service:
+            name: service-hello-world-03-hpa
+            port:
+              number: 80
+        path: /hpa
+        pathType: Prefix
 status:
   loadBalancer: {}
 ---
